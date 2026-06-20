@@ -2,9 +2,19 @@
 import { useState } from "react";
 import { Link, Button } from "@heroui/react";
 import Image from "next/image";
+import { useSession } from "@/lib/auth-client";
+
 
 function Navbar() {
+  const handleSignOut = async () => {
+    await signOut();
+  };
+
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const {data: session, isPending} = useSession();
+  // console.log("Session data:", session, "Is pending:", isPending);
+  
+  const user = session?.user;
 
   return (
     <nav className="sticky top-0 z-40 w-full border-b border-gray-800 bg-black/70 backdrop-blur-lg">
@@ -14,7 +24,7 @@ function Navbar() {
           <Image src="/legal.png" alt="Legal Solutions Logo" width={102} height={32} className="rounded-lg" />
 
          
-          <span className="text-white font-semibold text-xl">Legal<br />Solutions</span>
+          <span className="text-white font-semibold text-xl">Legal<br />Solutions</span>    
         </div>
 
         {/* Desktop Navigation */}
@@ -23,7 +33,16 @@ function Navbar() {
           <li><Link href="#" className="hover:text-white">Company</Link></li>
           <li><Link href="#" className="hover:text-white">Pricing</Link></li>
           <div className="h-6 w-px bg-gray-700" /> {/* Divider */}
-          <li><Link href="#" className="text-blue-400 font-medium">Sign In</Link></li>
+         {
+          user? 
+          <>
+          Hi, {user.name || user.email}
+          <Button variant="ghost" onClick={handleSignOut}>
+            Sign out
+          </Button>
+          </>:
+          <li><Link href="/auth/signin" className="text-blue-400 font-medium">Sign In</Link></li>}
+
           <li>
             <Button color="default" variant="flat" className="bg-white text-black font-bold">
               Get Started
@@ -49,7 +68,7 @@ function Navbar() {
           <Link href="#" className="text-white">Company</Link>
           <Link href="#" className="text-white">Pricing</Link>
           <hr className="border-gray-800" />
-          <Link href="#" className="text-blue-400">Sign In</Link>
+          <Link href="/auth/signin" className="text-blue-400">Sign In</Link>
           <Button className="bg-white text-black w-full">Get Started</Button>
         </div>
       )}

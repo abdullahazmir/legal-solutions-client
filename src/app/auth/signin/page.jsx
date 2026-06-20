@@ -3,45 +3,38 @@
 import { useState } from "react";
 import { authClient } from "@/lib/auth-client";
 import { useRouter } from "next/navigation";
-import {Description, Label, Radio, RadioGroup} from "@heroui/react";
 import Link from "next/link";
 
-const SignupPage = () => {
+const SigninPage = () => {
   const router = useRouter();
 
-  const [formData, setFormData] = useState({ name: "", email: "", password: "" });
-  const [error, setError]       = useState("");
-  const [loading, setLoading]   = useState(false);
-  const [success, setSuccess]   = useState(false);
-  const [role, setRole]         = useState("client");
+  const [formData, setFormData] = useState({ email: "", password: "" });
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const handleChange = (e) => {
     setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
     setError("");
   };
 
-  const handleSignup = async (e) => {
+  const handleSignin = async (e) => {
     e.preventDefault();
     setLoading(true);
     setError("");
 
-    const { data, error } = await authClient.signUp.email({
-      name:     formData.name,
-      email:    formData.email,
+    const { data, error } = await authClient.signIn.email({
+      email: formData.email,
       password: formData.password,
-      role:     role,
-
     });
 
     setLoading(false);
 
     if (error) {
-      setError(error.message || "Something went wrong. Please try again.");
+      setError(error.message || "Invalid email or password.");
       return;
     }
 
-    setSuccess(true);
-    router.push("#"); // change to wherever you want to redirect after signup
+    router.push("/"); // Redirect to dashboard or home after success
   };
 
   return (
@@ -50,16 +43,9 @@ const SignupPage = () => {
 
         {/* Header */}
         <div className="mb-8 text-center">
-          <h1 className="text-2xl font-bold text-gray-900">Create an account</h1>
-          <p className="text-gray-400 text-sm mt-1">Sign up to get started</p>
+          <h1 className="text-2xl font-bold text-gray-900">Welcome back</h1>
+          <p className="text-gray-400 text-sm mt-1">Please sign in to continue</p>
         </div>
-
-        {/* Success message */}
-        {success && (
-          <div className="mb-4 bg-green-50 border border-green-200 text-green-700 text-sm rounded-xl px-4 py-3 text-center">
-            Account created successfully! Redirecting...
-          </div>
-        )}
 
         {/* Error message */}
         {error && (
@@ -69,21 +55,7 @@ const SignupPage = () => {
         )}
 
         {/* Form */}
-        <form onSubmit={handleSignup} className="flex flex-col gap-4">
-
-          {/* Name */}
-          <div className="flex flex-col gap-1">
-            <label className="text-sm font-medium text-gray-700">Full Name</label>
-            <input
-              type="text"
-              name="name"
-              value={formData.name}
-              onChange={handleChange}
-              placeholder="John Doe"
-              required
-              className="border border-gray-200 rounded-xl px-4 py-3 text-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-emerald-300 transition"
-            />
-          </div>
+        <form onSubmit={handleSignin} className="flex flex-col gap-4">
 
           {/* Email */}
           <div className="flex flex-col gap-1">
@@ -107,37 +79,11 @@ const SignupPage = () => {
               name="password"
               value={formData.password}
               onChange={handleChange}
-              placeholder="Min. 8 characters"
+              placeholder="Enter your password"
               required
-              minLength={8}
               className="border border-gray-200 rounded-xl px-4 py-3 text-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-emerald-300 transition"
             />
           </div>
-          {/* Role */}
-           <div className="flex flex-col gap-4">
-     
-        <RadioGroup  defaultValue="client" name="role" orientation="horizontal onChange={value=>setRole(value)}">
-        <Radio selected value="client">
-          <Radio.Content>
-            <Radio.Control>
-              <Radio.Indicator />
-            </Radio.Control>
-          <p className="text-sm text-gray-600">Client </p>
-          </Radio.Content>
-         
-        </Radio>
-      
-        <Radio value="lawyer">
-          <Radio.Content>
-            <Radio.Control>
-              <Radio.Indicator />
-            </Radio.Control>
-           <p className="text-sm text-gray-600">Lawyer </p>
-          </Radio.Content>
-    
-        </Radio>
-      </RadioGroup>
-    </div>
 
           {/* Submit */}
           <button
@@ -145,28 +91,26 @@ const SignupPage = () => {
             disabled={loading}
             className="mt-2 bg-emerald-600 hover:bg-emerald-700 disabled:bg-emerald-300 text-white font-semibold rounded-xl py-3 text-sm transition-colors cursor-pointer disabled:cursor-not-allowed"
           >
-            {loading ? "Creating account..." : "Sign Up"}
+            {loading ? "Signing in..." : "Sign In"}
           </button>
-
         </form>
 
         {/* Divider */}
         <div className="flex items-center gap-3 my-6">
           <div className="flex-1 h-px bg-gray-200" />
-          <span className="text-gray-400 text-xs">Already have an account?</span>
+          <span className="text-gray-400 text-xs">Don't have an account?</span>
           <div className="flex-1 h-px bg-gray-200" />
         </div>
 
-        {/* Sign In link */}
-        <Link href="/auth/signin">
+        {/* Sign Up link */}
+        <Link href="/auth/signup">
           <button className="w-full border border-gray-200 rounded-xl py-3 text-sm font-semibold text-gray-700 hover:bg-gray-50 transition-colors cursor-pointer">
-            Sign In instead
+            Create an account
           </button>
         </Link>
-
       </div>
     </div>
   );
 };
 
-export default SignupPage;
+export default SigninPage;
