@@ -2,26 +2,30 @@
 
 import {LayoutSideContent, Bell, Envelope, Gear, House, Magnifier, Person} from "@gravity-ui/icons";
 import {Button, Drawer} from "@heroui/react";
+import { Briefcase } from "lucide-react";
+import Link from "next/link";
 
 export function DashboardSidebar() {
   const navItems = [
-    {icon: House, label: "Home"},
-    {icon: Magnifier, label: "Search"},
-    {icon: Bell, label: "Notifications"},
-    {icon: Envelope, label: "Messages"},
-    {icon: Person, label: "Profile"},
-    {icon: Gear, label: "Settings"},
+    {icon: House, href: "/dashboard/lawyer", label: "Home"},
+    {icon: Magnifier, href: "/dashboard/lawyer/cases", label: "Cases"},
+    {icon: Bell, href: "/dashboard/lawyer/cases/new", label: "Post a case"},
+    {icon: Briefcase, href: "/dashboard/lawyer/lawfirm", label: "Lawfirm"},
+
+    {icon: Envelope, href: "/messages", label: "Messages"},
+    {icon: Person, href: "/profile", label: "Profile"},
+    {icon: Gear, href: "/settings", label: "Settings"},
   ];
   const navContent =  <nav className="flex flex-col gap-1">
                 {navItems.map((item) => (
-                  <button
+                  <Link
                     key={item.label}
+                    href={item.href}
                     className="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm text-foreground transition-colors hover:bg-default"
-                    type="button"
                   >
                     <item.icon className="size-5 text-muted" />
                     {item.label}
-                  </button>
+                  </Link>
                 ))}
               </nav>
 
