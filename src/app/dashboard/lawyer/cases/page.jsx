@@ -1,61 +1,71 @@
-// src/app/dashboard/lawyer/cases/page.js
+// src/app/dashboard/lawyer/cases/page.jsx
 import React from 'react';
 import { Table, Chip, Button, Tooltip } from "@heroui/react";
 import { Eye, Pencil, TrashBin } from "@gravity-ui/icons";
+import { auth } from "@/lib/auth";
+import { headers } from "next/headers";
 import LawyerAvatar from '@/components/LawyerAvatar';
 
 const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
 
-// Fetch all cases — your MongoDB docs don't have lawfirmId yet,
-// so we fetch all and display everything
-const getAllCases = async () => {
+// ── Fetch only cases belonging to the logged-in lawyer ──
+const getCasesByLawyerId = async (lawyerId) => {
     try {
-        const res = await fetch(`${baseUrl}/api/cases`, {
-            cache: "no-store",
-        });
-        if (!res.ok) {
-            console.error(`Failed to fetch cases: ${res.status} ${res.statusText}`);
-            const errorText = await res.text();
-            console.error("Server Error Response:", errorText);
+        const url = `${baseUrl}/api/cases?lawyerId=${lawyerId}`;
+        console.log("Fetching cases from:", url);
+
+        const res = await fetch(url, { cache: "no-store" });
+
+        const contentType = res.headers.get("content-type");
+        if (!contentType?.includes("application/json")) {
+            console.error("Server did not return JSON. Status:", res.status);
             return [];
         }
+
+        if (!res.ok) return [];
+
         return res.json();
     } catch (err) {
-        console.error("getAllCases error:", err);
+        console.error("getCasesByLawyerId error:", err.message);
         return [];
     }
 };
 
 const getStatusColor = (status) => {
     switch (status?.toLowerCase()) {
-        case 'active': return 'success';
+        case 'active':    return 'success';
         case 'available': return 'success';
-        case 'closed': return 'danger';
-        case 'busy': return 'danger';
-        case 'pending': return 'warning';
-        default: return 'default';
+        case 'closed':    return 'danger';
+        case 'busy':      return 'danger';
+        case 'pending':   return 'warning';
+        default:          return 'default';
     }
 };
 
 const getAvailabilityColor = (availability) => {
     switch (availability?.toLowerCase()) {
         case 'available': return 'success';
-        case 'busy': return 'danger';
-        default: return 'warning';
+        case 'busy':      return 'danger';
+        default:          return 'warning';
     }
 };
 
 export default async function LawyerCasesPage() {
-    const cases = await getAllCases();
+    // ── Get logged-in lawyer from session ──
+    const session  = await auth.api.getSession({ headers: await headers() });
+    const lawyerId = session?.user?.id;
+
+    // ── Fetch only this lawyer's cases ──
+    const cases = await getCasesByLawyerId(lawyerId);
 
     return (
         <main className="min-h-screen bg-zinc-950 p-6">
             <div className="max-w-7xl mx-auto space-y-4">
 
-                {/* ── Header ── */}
+                {/* Header */}
                 <div className="flex items-center justify-between">
                     <div className="flex flex-col gap-1">
-                        <h1 className="text-2xl font-bold tracking-tight text-white">Manage All Cases</h1>
+                        <h1 className="text-2xl font-bold tracking-tight text-white">My Cases</h1>
                         <p className="text-sm text-zinc-400">
                             View, update, and manage your active legal cases.
                             <span className="ml-2 text-zinc-600">({cases.length} total)</span>
@@ -70,40 +80,40 @@ export default async function LawyerCasesPage() {
                     </Button>
                 </div>
 
-                {/* ── Table ── */}
-                <Table aria-label="Lawfirm cases management table">
+                {/* Table */}
+                <Table aria-label="Lawyer cases table">
                     <Table.ResizableContainer>
                         <Table.Content className="min-w-[950px]">
                             <Table.Header>
-                                <Table.Column isRowHeader defaultWidth="2fr" id="name" minWidth={200}>
+                                <Table.Column isRowHeader defaultWidth="2fr" id="col-name" minWidth={200}>
                                     Lawyer / Name
                                     <Table.ColumnResizer />
                                 </Table.Column>
-                                <Table.Column defaultWidth="1.5fr" id="specialization" minWidth={160}>
+                                <Table.Column defaultWidth="1.5fr" id="col-specialization" minWidth={160}>
                                     Specialization
                                     <Table.ColumnResizer />
                                 </Table.Column>
-                                <Table.Column defaultWidth="1fr" id="location" minWidth={120}>
+                                <Table.Column defaultWidth="1fr" id="col-location" minWidth={120}>
                                     Location
                                     <Table.ColumnResizer />
                                 </Table.Column>
-                                <Table.Column defaultWidth="1fr" id="fee" minWidth={120}>
+                                <Table.Column defaultWidth="1fr" id="col-fee" minWidth={120}>
                                     Consultation Fee
                                     <Table.ColumnResizer />
                                 </Table.Column>
-                                <Table.Column defaultWidth="1fr" id="availability" minWidth={120}>
+                                <Table.Column defaultWidth="1fr" id="col-availability" minWidth={120}>
                                     Availability
                                     <Table.ColumnResizer />
                                 </Table.Column>
-                                <Table.Column defaultWidth="1fr" id="status" minWidth={110}>
+                                <Table.Column defaultWidth="1fr" id="col-status" minWidth={110}>
                                     Status
                                     <Table.ColumnResizer />
                                 </Table.Column>
-                                <Table.Column defaultWidth="1fr" id="joined" minWidth={110}>
+                                <Table.Column defaultWidth="1fr" id="col-joined" minWidth={110}>
                                     Date Joined
                                     <Table.ColumnResizer />
                                 </Table.Column>
-                                <Table.Column defaultWidth="1.2fr" id="case-actions" minWidth={130}>
+                                <Table.Column defaultWidth="1.2fr" id="col-actions" minWidth={130}>
                                     Actions
                                 </Table.Column>
                             </Table.Header>
@@ -114,10 +124,10 @@ export default async function LawyerCasesPage() {
                                     return (
                                         <Table.Row key={caseId}>
 
-                                            {/* Lawyer / Name + photo */}
+                                            {/* Name + photo */}
                                             <Table.Cell>
                                                 <div className="flex items-center gap-3">
-                                                    <LawyerAvatar src={c.photoUrl} alt={c.name} />  {/* ✅ replaces the <img> */}
+                                                    <LawyerAvatar src={c.lawyerPhotoUrl} alt={c.name} />
                                                     <div>
                                                         <p className="font-medium text-default-800 text-sm">{c.name}</p>
                                                         <p className="text-xs text-default-400">{c.experience} yrs exp.</p>
@@ -125,7 +135,7 @@ export default async function LawyerCasesPage() {
                                                 </div>
                                             </Table.Cell>
 
-                                            {/* Specialization + Bar License */}
+                                            {/* Specialization */}
                                             <Table.Cell>
                                                 <div className="flex flex-col gap-0.5">
                                                     <span className="text-sm font-medium capitalize">{c.specialization}</span>
@@ -140,12 +150,10 @@ export default async function LawyerCasesPage() {
                                                 <span className="text-sm text-default-600 capitalize">{c.location}</span>
                                             </Table.Cell>
 
-                                            {/* Consultation Fee */}
+                                            {/* Fee */}
                                             <Table.Cell>
                                                 <div className="flex flex-col gap-0.5">
-                                                    <span className="text-sm font-semibold">
-                                                        {c.currency} {c.consultationFee}
-                                                    </span>
+                                                    <span className="text-sm font-semibold">{c.currency} {c.consultationFee}</span>
                                                     {c.consultationHours && (
                                                         <span className="text-xs text-default-400">{c.consultationHours} hrs</span>
                                                     )}
@@ -154,24 +162,14 @@ export default async function LawyerCasesPage() {
 
                                             {/* Availability */}
                                             <Table.Cell>
-                                                <Chip
-                                                    color={getAvailabilityColor(c.availability)}
-                                                    size="sm"
-                                                    variant="soft"
-                                                    className="capitalize"
-                                                >
+                                                <Chip color={getAvailabilityColor(c.availability)} size="sm" variant="soft" className="capitalize">
                                                     {c.availability || "Unknown"}
                                                 </Chip>
                                             </Table.Cell>
 
                                             {/* Status */}
                                             <Table.Cell>
-                                                <Chip
-                                                    color={getStatusColor(c.status)}
-                                                    size="sm"
-                                                    variant="soft"
-                                                    className="capitalize"
-                                                >
+                                                <Chip color={getStatusColor(c.status)} size="sm" variant="soft" className="capitalize">
                                                     {c.status || "Unknown"}
                                                 </Chip>
                                             </Table.Cell>
@@ -193,37 +191,17 @@ export default async function LawyerCasesPage() {
                                             <Table.Cell>
                                                 <div className="relative flex items-center gap-1">
                                                     <Tooltip content="View Case">
-                                                        <Button
-                                                            isIconOnly
-                                                            size="sm"
-                                                            variant="light"
-                                                            aria-label="View case"
-                                                            as="a"
-                                                            href={`/dashboard/lawyer/cases/${caseId}`}
-                                                        >
+                                                        <Button isIconOnly size="sm" variant="light" aria-label="View case" as="a" href={`/dashboard/lawyer/cases/${caseId}`}>
                                                             <Eye className="text-default-400 w-4 h-4" />
                                                         </Button>
                                                     </Tooltip>
                                                     <Tooltip content="Edit Case">
-                                                        <Button
-                                                            isIconOnly
-                                                            size="sm"
-                                                            variant="light"
-                                                            aria-label="Edit case"
-                                                            as="a"
-                                                            href={`/dashboard/lawyer/cases/${caseId}/edit`}
-                                                        >
+                                                        <Button isIconOnly size="sm" variant="light" aria-label="Edit case" as="a" href={`/dashboard/lawyer/cases/${caseId}/edit`}>
                                                             <Pencil className="text-default-400 w-4 h-4" />
                                                         </Button>
                                                     </Tooltip>
                                                     <Tooltip content="Delete Case">
-                                                        <Button
-                                                            isIconOnly
-                                                            size="sm"
-                                                            variant="light"
-                                                            color="danger"
-                                                            aria-label="Delete case"
-                                                        >
+                                                        <Button isIconOnly size="sm" variant="light" color="danger" aria-label="Delete case">
                                                             <TrashBin className="text-danger w-4 h-4" />
                                                         </Button>
                                                     </Tooltip>
