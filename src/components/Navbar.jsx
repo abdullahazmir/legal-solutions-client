@@ -29,9 +29,9 @@ function Navbar() {
 
         {/* Desktop Navigation */}
         <ul className="hidden md:flex items-center gap-8 text-gray-300">
-          <li><Link href="#" className="text-white hover:text-white">Browse Jobs</Link></li>
-          <li><Link href="#" className="hover:text-white">Company</Link></li>
-          <li><Link href="#" className="hover:text-white">Pricing</Link></li>
+          <li><Link href="/cases" className="text-white hover:text-white">Browse Cases</Link></li>
+          <li><Link href="/dashboard/lawyer/lawfirm" className="hover:text-white">Law Firm</Link></li>
+          <li><Link href="/" className="hover:text-white">To Know</Link></li>
           <div className="h-6 w-px bg-gray-700" /> {/* Divider */}
          {
           user? 
