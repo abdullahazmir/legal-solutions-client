@@ -2,18 +2,20 @@
 
 import { useState } from "react";
 import { authClient } from "@/lib/auth-client";
-import { useRouter } from "next/navigation";
-import {Description, Label, Radio, RadioGroup} from "@heroui/react";
+import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 
 const SignupPage = () => {
   const router = useRouter();
+  const searchParams = useSearchParams();
+
+  // ✅ Read redirect param — passed from signin page or anywhere
+  // e.g. /auth/signup?redirect=/cases/abc123/apply
+  const redirectTo = searchParams.get("redirect") || "/";
 
   const [formData, setFormData] = useState({ name: "", email: "", password: "" });
-  const [error, setError]       = useState("");
-  const [loading, setLoading]   = useState(false);
-  const [success, setSuccess]   = useState(false);
-  const [role, setRole]         = useState("client");
+  const [error,    setError]    = useState("");
+  const [loading,  setLoading]  = useState(false);
 
   const handleChange = (e) => {
     setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
@@ -29,8 +31,6 @@ const SignupPage = () => {
       name:     formData.name,
       email:    formData.email,
       password: formData.password,
-      role:     role,
-
     });
 
     setLoading(false);
@@ -40,8 +40,8 @@ const SignupPage = () => {
       return;
     }
 
-    setSuccess(true);
-    router.push("#"); // change to wherever you want to redirect after signup
+    // ✅ After signup, go back to wherever they came from
+    router.push(redirectTo);
   };
 
   return (
@@ -51,17 +51,14 @@ const SignupPage = () => {
         {/* Header */}
         <div className="mb-8 text-center">
           <h1 className="text-2xl font-bold text-gray-900">Create an account</h1>
-          <p className="text-gray-400 text-sm mt-1">Sign up to get started</p>
+          <p className="text-gray-400 text-sm mt-1">
+            {redirectTo !== "/"
+              ? "Sign up to continue to your requested page"
+              : "Sign up to get started"}
+          </p>
         </div>
 
-        {/* Success message */}
-        {success && (
-          <div className="mb-4 bg-green-50 border border-green-200 text-green-700 text-sm rounded-xl px-4 py-3 text-center">
-            Account created successfully! Redirecting...
-          </div>
-        )}
-
-        {/* Error message */}
+        {/* Error */}
         {error && (
           <div className="mb-4 bg-red-50 border border-red-200 text-red-600 text-sm rounded-xl px-4 py-3 text-center">
             {error}
@@ -70,8 +67,6 @@ const SignupPage = () => {
 
         {/* Form */}
         <form onSubmit={handleSignup} className="flex flex-col gap-4">
-
-          {/* Name */}
           <div className="flex flex-col gap-1">
             <label className="text-sm font-medium text-gray-700">Full Name</label>
             <input
@@ -85,7 +80,6 @@ const SignupPage = () => {
             />
           </div>
 
-          {/* Email */}
           <div className="flex flex-col gap-1">
             <label className="text-sm font-medium text-gray-700">Email</label>
             <input
@@ -99,7 +93,6 @@ const SignupPage = () => {
             />
           </div>
 
-          {/* Password */}
           <div className="flex flex-col gap-1">
             <label className="text-sm font-medium text-gray-700">Password</label>
             <input
@@ -113,33 +106,7 @@ const SignupPage = () => {
               className="border border-gray-200 rounded-xl px-4 py-3 text-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-emerald-300 transition"
             />
           </div>
-          {/* Role */}
-           <div className="flex flex-col gap-4">
-     
-        <RadioGroup  defaultValue="client" name="role" orientation="horizontal onChange={value=>setRole(value)}">
-        <Radio selected value="client">
-          <Radio.Content>
-            <Radio.Control>
-              <Radio.Indicator />
-            </Radio.Control>
-          <p className="text-sm text-gray-600">Client </p>
-          </Radio.Content>
-         
-        </Radio>
-      
-        <Radio value="lawyer">
-          <Radio.Content>
-            <Radio.Control>
-              <Radio.Indicator />
-            </Radio.Control>
-           <p className="text-sm text-gray-600">Lawyer </p>
-          </Radio.Content>
-    
-        </Radio>
-      </RadioGroup>
-    </div>
 
-          {/* Submit */}
           <button
             type="submit"
             disabled={loading}
@@ -147,7 +114,6 @@ const SignupPage = () => {
           >
             {loading ? "Creating account..." : "Sign Up"}
           </button>
-
         </form>
 
         {/* Divider */}
@@ -157,8 +123,8 @@ const SignupPage = () => {
           <div className="flex-1 h-px bg-gray-200" />
         </div>
 
-        {/* Sign In link */}
-        <Link href="/auth/signin">
+        {/* ✅ Pass redirect param to signin too so the chain is preserved */}
+        <Link href={`/auth/signin?redirect=${redirectTo}`}>
           <button className="w-full border border-gray-200 rounded-xl py-3 text-sm font-semibold text-gray-700 hover:bg-gray-50 transition-colors cursor-pointer">
             Sign In instead
           </button>

@@ -2,15 +2,17 @@
 
 import { useState } from "react";
 import { authClient } from "@/lib/auth-client";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 
 const SigninPage = () => {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const redirectTo = searchParams.get("redirect") || "/";
 
   const [formData, setFormData] = useState({ email: "", password: "" });
-  const [error, setError] = useState("");
-  const [loading, setLoading] = useState(false);
+  const [error,    setError]    = useState("");
+  const [loading,  setLoading]  = useState(false);
 
   const handleChange = (e) => {
     setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
@@ -23,7 +25,7 @@ const SigninPage = () => {
     setError("");
 
     const { data, error } = await authClient.signIn.email({
-      email: formData.email,
+      email:    formData.email,
       password: formData.password,
     });
 
@@ -34,30 +36,30 @@ const SigninPage = () => {
       return;
     }
 
-    router.push("/"); // Redirect to dashboard or home after success
+    // ✅ Redirect back to original page after signin
+    router.push(redirectTo);
   };
 
   return (
     <div className="min-h-screen bg-gray-100 flex items-center justify-center p-4">
       <div className="bg-white rounded-2xl shadow-sm p-8 w-full max-w-md">
 
-        {/* Header */}
         <div className="mb-8 text-center">
           <h1 className="text-2xl font-bold text-gray-900">Welcome back</h1>
-          <p className="text-gray-400 text-sm mt-1">Please sign in to continue</p>
+          <p className="text-gray-400 text-sm mt-1">
+            {redirectTo !== "/"
+              ? "Sign in to continue to your requested page"
+              : "Please sign in to continue"}
+          </p>
         </div>
 
-        {/* Error message */}
         {error && (
           <div className="mb-4 bg-red-50 border border-red-200 text-red-600 text-sm rounded-xl px-4 py-3 text-center">
             {error}
           </div>
         )}
 
-        {/* Form */}
         <form onSubmit={handleSignin} className="flex flex-col gap-4">
-
-          {/* Email */}
           <div className="flex flex-col gap-1">
             <label className="text-sm font-medium text-gray-700">Email</label>
             <input
@@ -71,7 +73,6 @@ const SigninPage = () => {
             />
           </div>
 
-          {/* Password */}
           <div className="flex flex-col gap-1">
             <label className="text-sm font-medium text-gray-700">Password</label>
             <input
@@ -85,7 +86,6 @@ const SigninPage = () => {
             />
           </div>
 
-          {/* Submit */}
           <button
             type="submit"
             disabled={loading}
@@ -95,19 +95,19 @@ const SigninPage = () => {
           </button>
         </form>
 
-        {/* Divider */}
         <div className="flex items-center gap-3 my-6">
           <div className="flex-1 h-px bg-gray-200" />
           <span className="text-gray-400 text-xs">Don't have an account?</span>
           <div className="flex-1 h-px bg-gray-200" />
         </div>
 
-        {/* Sign Up link */}
-        <Link href="/auth/signup">
+        {/* ✅ Pass redirect param to signup so the chain is preserved */}
+        <Link href={`/auth/signup?redirect=${redirectTo}`}>
           <button className="w-full border border-gray-200 rounded-xl py-3 text-sm font-semibold text-gray-700 hover:bg-gray-50 transition-colors cursor-pointer">
             Create an account
           </button>
         </Link>
+
       </div>
     </div>
   );
