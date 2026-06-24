@@ -3,6 +3,9 @@ import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import ApplyForm from "./ApplyForm";
+import { getApplicationsByClient } from "@/lib/api/applications";
+import Link from "next/link";
+import { getPlanById } from "@/lib/api/plans";
 
 const getCaseById = async (id) => {
     try {
@@ -24,20 +27,36 @@ const ApplyPage = async ({ params }) => {
     const { id } = await params;
 
     const session = await auth.api.getSession({ headers: await headers() });
-    const user    = session?.user;
+    const user = session?.user;
 
     if (!user) {
         redirect(`/auth/signin?redirect=/cases/${id}/apply`);
     }
-    
-    if(user.role !== 'client'){
+
+    if (user.role !== 'client') {
         return <div>
             <h1>Only client can apply for this</h1>
         </div>
     }
 
-    const caseData = await getCaseById(id);
+    // const applications = await getApplicationsByClient(user.id)
+    // const caseData = await getCaseById(id);
 
+    // updated, two functions together
+
+    const [applications, caseData] = await Promise.all([
+        getApplicationsByClient(user.id),
+        getCaseById(id)
+    ])
+
+    const plan = await getPlanById(user?.plan || 'client_basic')
+
+    // console.log(plan)
+    
+    // const plan = {
+    //     name: 'Free',
+    //     maxApplicationPerMonth: 3
+    // }
     if (!caseData) {
         return (
             <div className="min-h-screen bg-zinc-950 flex items-center justify-center">
@@ -48,7 +67,14 @@ const ApplyPage = async ({ params }) => {
 
     return (
         <main className="min-h-screen bg-zinc-950 py-12 px-4">
-            <ApplyForm caseData={caseData} user={user} caseId={id} />
+            <h1 className=" flex justify-center font-bold py-5 text-centre">You have applied so far :{applications.length} out of {plan.maxAppPerMonth} applications</h1>
+            <p className=" flex justify-center font-bold py-5 text-centre">purchase plan, for more Apply :::<Link href={'/plans'}>
+                <button className="btn btn-ghost text-red-800"> view plans now</button>
+            </Link></p>
+
+            {
+                applications.length < plan.maxAppPerMonth && (<ApplyForm caseData={caseData} user={user} caseId={id} />)
+            }
         </main>
     );
 };

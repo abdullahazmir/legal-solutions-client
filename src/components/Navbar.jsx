@@ -32,7 +32,7 @@ function Navbar() {
         <ul className="hidden md:flex items-center gap-8 text-gray-300">
           <li><Link href="/cases" className="text-white hover:text-white">Browse Cases</Link></li>
           <li><Link href="/dashboard/lawyer/lawfirm" className="hover:text-white">Law Firm</Link></li>
-          <li><Link href="/" className="hover:text-white">To Know</Link></li>
+          <li><Link href="/plans" className="hover:text-white">Buy Plan</Link></li>
 
           <div className="h-6 w-px bg-gray-700" />
 

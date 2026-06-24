@@ -16,7 +16,26 @@ export const auth = betterAuth({
     additionalFields: {
       role: {
         default: "client",
+      },
+      plan:{
+        default: 'client_basic'
       }
     }
-  }
+  },
+  // ✅ Add this — expose extra user fields in the session
+  session: {
+        additionalFields: {
+            role: { type: "string" },
+            plan: { type: "string" },
+        },
+    },
+
+    // ✅ Also allow these fields to be set during signup
+    // user: {
+    //     additionalFields: {
+    //         role: { type: "string" },
+    //         plan: { type: "string" },
+    //     },
+    // },
+
 });

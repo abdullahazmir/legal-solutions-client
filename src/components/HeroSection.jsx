@@ -1,6 +1,7 @@
 "use client";
 import { Button } from "@heroui/react";
 import { motion } from "motion/react"
+import Link from "next/link";
 
 export default function HeroSection() {
   return (
@@ -29,12 +30,14 @@ export default function HeroSection() {
         </p>
 
         <div className="flex flex-col sm:flex-row gap-4 mt-6">
-          <Button 
+         <button className="">
+           <Link  href={'/cases'}
             className="bg-white text-black font-semibold h-12 px-8"
             radius="md"
           >
             Find a Lawyer
-          </Button>
+          </Link>
+         </button>
           <Button 
             variant="bordered" 
             className="text-white border-gray-700 h-12 px-8"
