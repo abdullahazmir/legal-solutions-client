@@ -97,20 +97,23 @@ export default function LawFirmProfile({ lawyer, lawyerFirm }) {
             firmSize: firmSize || '1-5 lawyers',
             description,
             logo: logoUrl || (firm ? firm.logo : ''),
-            status: firm ? firm.status : 'Pending',
+            status: firm  && firm.status ? firm.status : 'Pending',
             lawyerId:    lawyer?.id,
             lawyerName:  lawyer?.name,
             lawyerEmail: lawyer?.email,
             createdAt: firm?.createdAt || new Date().toISOString(),
         };
-
+        
         setFirm(newFirmData);
-
+        
         const payload = await createLawFirm(newFirmData);
-
+        
         if (payload?.insertedId) {
+            const savedFirm = {...firm, _id:payload.insertedId}
+            setFirm(savedFirm)
             toast.success("Law firm registered successfully!");
         }
+        // console.log('before created',newFirmData)
 
         setErrors({});
         setIsEditing(false);

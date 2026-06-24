@@ -17,8 +17,16 @@ function Navbar() {
   const handleSignOut = async () => {
     await signOut();
   };
+  const dashboardLinks ={
+    client: '/dashboard/client',
+    lawyer: '/dashboard/lawyer',
+    admin: '/dashboard/admin'
+  }
+  // const user = await getUserSession()
 
-  return (
+      const dashboardUrl = dashboardLinks[user?.role] || "/dashboard/client";
+      
+      return (
     <nav className="sticky top-0 z-40 w-full border-b border-gray-800 bg-black/70 backdrop-blur-lg">
       <header className="flex h-20 items-center justify-between px-6 lg:px-12">
 
@@ -28,11 +36,27 @@ function Navbar() {
           <span className="text-white font-semibold text-xl">Legal<br />Solutions</span>
         </div>
 
+
+
         {/* Desktop Navigation */}
         <ul className="hidden md:flex items-center gap-8 text-gray-300">
-          <li><Link href="/cases" className="text-white hover:text-white">Browse Cases</Link></li>
-          <li><Link href="/dashboard/lawyer/lawfirm" className="hover:text-white">Law Firm</Link></li>
-          <li><Link href="/plans" className="hover:text-white">Buy Plan</Link></li>
+          <li>
+            <Link href="/cases" className="text-white hover:text-white">Browse Cases</Link>
+          </li>
+
+          <li>
+            <Link href="/dashboard/lawyer/lawfirm" className="hover:text-white">Law Firm</Link>
+          </li>
+
+          <li>
+            <Link href="/plans" className="hover:text-white">Buy Plan</Link>
+          </li>
+
+          <li>
+            {
+              !isPending && user && (<Link href={dashboardUrl} className="text-white hover:text-white"> Dashboard</Link>)
+            }
+          </li>
 
           <div className="h-6 w-px bg-gray-700" />
 
@@ -57,6 +81,15 @@ function Navbar() {
             </Button>
           </Link>
         </ul>
+
+     
+   
+      
+   
+
+
+
+
 
         {/* Mobile Hamburger */}
         <button

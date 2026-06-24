@@ -1,21 +1,54 @@
 
 
-import {LayoutSideContent, Bell, Envelope, Gear, House, Magnifier, Person} from "@gravity-ui/icons";
+import { getUserSession } from "@/lib/core/session";
+import {LayoutSideContent, Bell, Envelope, Gear, House, Magnifier, Person, CreditCard} from "@gravity-ui/icons";
 import {Button, Drawer} from "@heroui/react";
-import { Briefcase } from "lucide-react";
+import { Bookmark, Briefcase, Building, FileText, LayoutDashboard, Scale, Search, SearchAlert, Settings, ShieldCheck } from "lucide-react";
 import Link from "next/link";
 
-export function DashboardSidebar() {
-  const navItems = [
+export async function DashboardSidebar() {
+
+  const user = await getUserSession()
+
+  const lawyerNavLinks = [
     {icon: House, href: "/dashboard/lawyer", label: "Home"},
     {icon: Magnifier, href: "/dashboard/lawyer/cases", label: "Cases"},
     {icon: Bell, href: "/dashboard/lawyer/cases/new", label: "Post a case"},
     {icon: Briefcase, href: "/dashboard/lawyer/lawfirm", label: "Lawfirm"},
-
     {icon: Envelope, href: "/messages", label: "Messages"},
     {icon: Person, href: "/profile", label: "Profile"},
-    {icon: Gear, href: "/settings", label: "Settings"},
   ];
+
+
+  const clientNavLinks = [
+  { icon: LayoutDashboard, href: "/dashboard/client",                label: "Dashboard"    },
+  { icon: SearchAlert,          href: "/cases",                           label: "Browse Cases" },
+  { icon: Bookmark,        href: "/dashboard/client/saved-cases",    label: "Saved Cases"  },
+  { icon: FileText,        href: "/dashboard/client/applications",   label: "Applications" },
+  { icon: CreditCard,      href: "/dashboard/client/billing",        label: "Billing"      },
+  { icon: Settings,        href: "/dashboard/client/settings",       label: "Settings"     },
+];
+
+const adminNavLinks = [
+    { icon: LayoutDashboard, href: "/dashboard/admin",                  label: "Dashboard"    },
+    { icon: Person,          href: "/dashboard/admin/users",            label: "Users"        },
+    { icon: Briefcase,       href: "/dashboard/admin/lawyers",          label: "Lawyers"      },
+    { icon: Building,        href: "/dashboard/admin/lawfirms",         label: "Law Firms"    },
+    { icon: Scale,           href: "/dashboard/admin/cases",            label: "Cases"        },
+    { icon: FileText,        href: "/dashboard/admin/applications",     label: "Applications" },
+    { icon: CreditCard,      href: "/dashboard/admin/payments",         label: "Payments"     },
+    { icon: ShieldCheck,     href: "/dashboard/admin/verifications",    label: "Verifications"},
+    { icon: Settings,        href: "/dashboard/admin/settings",         label: "Settings"     },
+]
+
+const navLinksMap ={
+  client: clientNavLinks,
+  lawyer: lawyerNavLinks,
+  admin: adminNavLinks
+}
+
+const navItems = navLinksMap[user?.role || 'client']
+
   const navContent =  <nav className="flex flex-col gap-1">
                 {navItems.map((item) => (
                   <Link

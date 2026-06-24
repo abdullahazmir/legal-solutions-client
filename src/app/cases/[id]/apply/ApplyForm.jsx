@@ -42,7 +42,7 @@ export default function ApplyForm({ caseData: c, user, caseId }) {
             clientPhone: form.phone,
             message:     form.message,
             preferredDate: form.preferredDate,
-            status:      "pending",
+            status:      "Applied",
             createdAt:   new Date().toISOString(),
         };
 
