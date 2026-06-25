@@ -33,7 +33,7 @@ const adminNavLinks = [
     { icon: LayoutDashboard, href: "/dashboard/admin",                  label: "Dashboard"    },
     { icon: Person,          href: "/dashboard/admin/users",            label: "Users"        },
     { icon: Briefcase,       href: "/dashboard/admin/lawyers",          label: "Lawyers"      },
-    { icon: Building,        href: "/dashboard/admin/lawfirms",         label: "Law Firms"    },
+    { icon: Building,        href: "/dashboard/admin/lawFirms",         label: "Law Firms"    },
     { icon: Scale,           href: "/dashboard/admin/cases",            label: "Cases"        },
     { icon: FileText,        href: "/dashboard/admin/applications",     label: "Applications" },
     { icon: CreditCard,      href: "/dashboard/admin/payments",         label: "Payments"     },

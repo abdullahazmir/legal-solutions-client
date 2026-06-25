@@ -93,12 +93,14 @@ export default function LawyerProfileForm({ session, lawFirm }) {
                         <Person size={14} className="text-zinc-500" />
                         Publishing as: <span className="font-semibold text-zinc-300">{session?.user?.name}</span>
                         <span className="text-emerald-500 font-medium bg-emerald-950/30 px-1.5 py-0.5 rounded border border-emerald-900/50">
-                            Verified
+                          {lawFirm.status} 
                         </span>
                     </div>
                 </div>
 
-                <Form onSubmit={handleSubmit} className="space-y-8" validationErrors={errors} validationBehavior="aria">
+                {lawFirm.status !== 'Approved' && <div> please wait for approval</div>}
+
+               {lawFirm.status ==='Approved' && <Form onSubmit={handleSubmit} className="space-y-8" validationErrors={errors} validationBehavior="aria">
 
                     {/* SECTION 1: Personal Information */}
                     <Fieldset className="space-y-6 w-full">
@@ -259,7 +261,7 @@ export default function LawyerProfileForm({ session, lawFirm }) {
                             Publish Profile
                         </Button>
                     </div>
-                </Form>
+                </Form>}
             </div>
         </div>
     );

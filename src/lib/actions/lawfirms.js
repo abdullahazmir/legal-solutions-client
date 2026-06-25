@@ -1,24 +1,18 @@
 'use server'
 
+import { revalidatePath } from "next/cache";
 import { serverMutation } from "../core/server";
 
 export const createLawFirm = async (newLawFirmData) => {
     return serverMutation('/api/lawfirms', newLawFirmData );
 }
 
+export const updateLawFirm= async(id, data)=>{
+  const result= await serverMutation(`/api/lawfirms/${id}`, data, 'PATCH');
+  revalidatePath('/dashboard/admin/lawFirms')
+  return result
+}
 
 
 
-// const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
 
-// export const createCompany = async (newCompanyData) => {
-//     const res = await fetch(`${baseUrl}/api/companies`, {
-//         method: 'POST',
-//         headers: {
-//             'Content-Type': 'application/json',
-//         },
-//         body: JSON.stringify(newCompanyData),
-//     });
-
-//     return res.json();
-// }
