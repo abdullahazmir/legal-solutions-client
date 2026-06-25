@@ -18,6 +18,7 @@ const getAllCases = async () => {
         return [];
     }
 };
+export const dynamic = 'force-dynamic';
 
 export default async function CasesListPage() {
     const cases = await getAllCases();
