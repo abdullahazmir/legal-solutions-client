@@ -1,10 +1,13 @@
-import { serverFetch } from "../core/server";
+import { protectedFetch, serverFetch } from "../core/server";
 import { getUserSession } from "../core/session";
 
 
 
 export const getLawFirms= async()=>{
-    return serverFetch('/api/lawfirms')
+    return protectedFetch('/api/lawfirms')
+
+    // return serverFetch('/api/lawfirms')
+
 
 }
 export const getLawyerLawFirms = async (lawyerId) => {

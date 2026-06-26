@@ -1,6 +1,7 @@
 import { betterAuth } from "better-auth";
 import { MongoClient } from "mongodb";
 import { mongodbAdapter } from "better-auth/adapters/mongodb";
+import { admin } from "better-auth/plugins";
 
 const client = new MongoClient(process.env.MONGO_DB_URI); // ✅ no quotes
 const db = client.db(process.env.MONGO_DB_NAME || "better-auth");
@@ -21,10 +22,10 @@ export const auth = betterAuth({
   user:{
     additionalFields: {
       role: {
-        default: "client",
+        defaultValue: "client",
       },
       plan:{
-        default: 'client_basic'
+        defaultValue: 'client_basic'
       }
     }
   },
@@ -36,12 +37,19 @@ export const auth = betterAuth({
         },
     },
 
-    // ✅ Also allow these fields to be set during signup
-    // user: {
-    //     additionalFields: {
-    //         role: { type: "string" },
-    //         plan: { type: "string" },
-    //     },
-    // },
+    plugins: [
+      admin()
+    ]
 
-});
+    
+  });
+
+
+  
+  // ✅ Also allow these fields to be set during signup
+  // user: {
+  //     additionalFields: {
+  //         role: { type: "string" },
+  //         plan: { type: "string" },
+  //     },
+  // },
