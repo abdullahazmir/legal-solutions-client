@@ -4,7 +4,7 @@ import Image from "next/image";
 import { LogoFacebook, LogoLinkedin, LogoGithub } from '@gravity-ui/icons';
 
 const footerLinks = {
-  product: ["Job discovery", "Worker AI", "Companies", "Salary data"],
+  product: ["Cases discovery", "Client Experience", "Law firm",],
   navigations: ["Help center", "Career library", "Contact"],
   resources: ["Brand Guideline", "Newsroom"],
 };
@@ -29,7 +29,7 @@ export default function Footer() {
             <span className="text-white font-bold text-xl leading-tight">Legal <br /> Solutions</span>
           </div>
           <p className="text-gray-400 max-w-xs">
-            The AI-native platform. Built for professionals who take their work seriously.
+            The legal platform. Built for professionals and clients who take their work seriously.
           </p>
           <div className="flex gap-3 mt-4">
             {Object.entries(socialIcons).map(([name, Icon]) => (

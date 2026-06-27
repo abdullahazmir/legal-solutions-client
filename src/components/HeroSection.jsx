@@ -30,21 +30,23 @@ export default function HeroSection() {
         </p>
 
         <div className="flex flex-col sm:flex-row gap-4 mt-6">
-         <button className="">
+         <button className="rounded-full bg-gray-400">
            <Link  href={'/cases'}
-            className="bg-white text-black font-semibold h-12 px-8"
+            className=" text-black font-semibold h-12 px-8"
             radius="md"
           >
             Find a Lawyer
           </Link>
          </button>
-          <Button 
-            variant="bordered" 
-            className="text-white border-gray-700 h-12 px-8"
+
+          <button className="rounded-full bg-blue-100 p-4">
+           <Link  href={'/auth/signup'}
+            className=" text-black font-semibold h-12 px-6 py-6"
             radius="md"
           >
             Join as a Lawyer
-          </Button>
+          </Link>
+         </button>
         </div>
       </div>
     </section>

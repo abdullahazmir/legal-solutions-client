@@ -1,4 +1,4 @@
-// src/app/dashboard/lawyer/cases/_components/LawyerAvatar.jsx
+// src/app/dashboard/lawyer/cases/components/LawyerAvatar.jsx
 "use client";
 
 export default function LawyerAvatar({ src, alt }) {
