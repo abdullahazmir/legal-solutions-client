@@ -32,7 +32,9 @@ function Navbar() {
 
         {/* Logo */}
         <div className="flex items-center gap-2">
-          <Image src="/legal.png" alt="Legal Solutions Logo" width={102} height={32} className="rounded-lg" />
+         <Link href={"/"}>
+          <Image  src="/legal.png" alt="Legal Solutions Logo" width={102} height={32} className="rounded-lg" />
+         </Link>
           <span className="text-white font-semibold text-xl">Legal<br />Solutions</span>
         </div>
 

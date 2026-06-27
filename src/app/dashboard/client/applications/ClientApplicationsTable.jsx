@@ -12,6 +12,7 @@ import {
     ScalesBalanced,
     Circle
 } from '@gravity-ui/icons';
+import Link from 'next/link';
 
 const formatRelativeTime = (dateString) => {
     const now = new Date();
@@ -72,10 +73,10 @@ const ClientApplicationsTable = ({ cases }) => {
                     My Applications
                     <span className="ml-2 text-sm font-normal text-zinc-500">({cases.length})</span>
                 </h2>
-                <a href="/cases"
+                <Link href="/cases"
                     className="text-xs text-amber-600 hover:text-amber-400 transition border border-amber-800/40 px-3 py-1.5 rounded-lg">
                     Browse Cases
-                </a>
+                </Link>
             </div>
 
             <Table

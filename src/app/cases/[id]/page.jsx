@@ -1,5 +1,5 @@
 // src/app/cases/[id]/page.jsx
-import { Link } from "@heroui/react";
+import { Button, Link } from "@heroui/react";
 import {
     LocationArrow, Briefcase, CircleDollar,
     Clock, Star, Calendar, Globe, Person, BookOpen,
@@ -7,6 +7,7 @@ import {
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
 import HireButton from "@/components/Cases/HireButton";
+import SaveCaseButton from "@/components/dashboard/SaveCaseButton";
 ;
 
 const getCaseById = async (id) => {
@@ -35,8 +36,8 @@ const formatDate = (dateString) => {
 const getAvailabilityStyle = (availability) => {
     switch (availability?.toLowerCase()) {
         case "available": return "bg-emerald-500/15 text-emerald-400 border-emerald-500/30";
-        case "busy":      return "bg-red-500/15 text-red-400 border-red-500/30";
-        default:          return "bg-zinc-500/15 text-zinc-400 border-zinc-500/30";
+        case "busy": return "bg-red-500/15 text-red-400 border-red-500/30";
+        default: return "bg-zinc-500/15 text-zinc-400 border-zinc-500/30";
     }
 };
 
@@ -202,15 +203,22 @@ export default async function CaseDetailPage({ params }) {
                         {isAvailable ? "✦ Currently accepting clients" : "● Not available right now"}
                     </div>
 
+                    {/* to save the case */}
+                  
+                     
+                       <SaveCaseButton caseData={c} session={session} />
+                     
+                  
+
                     {/* ✅ HireButton handles auth check + redirect */}
-                   <HireButton  caseId={id}
+                    <HireButton caseId={id}
                         isAvailable={isAvailable}
                         session={session}>
-                            <h1>Apply for consultation</h1>
+                        <h1>Apply for consultation</h1>
 
-                   </HireButton>
-                       
-                    
+                    </HireButton>
+
+
 
                     <Link
                         href="/cases"

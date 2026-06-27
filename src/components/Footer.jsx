@@ -1,7 +1,7 @@
 import { Link } from "@heroui/react";
 import Image from "next/image";
 // Import the required icons from Gravity UI
-import {LogoFacebook, LogoLinkedin, LogoGithub} from '@gravity-ui/icons';
+import { LogoFacebook, LogoLinkedin, LogoGithub } from '@gravity-ui/icons';
 
 const footerLinks = {
   product: ["Job discovery", "Worker AI", "Companies", "Salary data"],
@@ -23,7 +23,9 @@ export default function Footer() {
         {/* Brand Section */}
         <div className="lg:col-span-2 flex flex-col gap-4">
           <div className="flex items-center gap-2">
-            <Image src="/legal.png" alt="Legal Solutions Logo" width={100} height={32} className="rounded-lg" />
+            <Link href={"/"}>
+              <Image src="/legal.png" alt="Legal Solutions Logo" width={102} height={32} className="rounded-lg" />
+            </Link>
             <span className="text-white font-bold text-xl leading-tight">Legal <br /> Solutions</span>
           </div>
           <p className="text-gray-400 max-w-xs">
@@ -31,9 +33,9 @@ export default function Footer() {
           </p>
           <div className="flex gap-3 mt-4">
             {Object.entries(socialIcons).map(([name, Icon]) => (
-              <a 
-                key={name} 
-                href="#" 
+              <a
+                key={name}
+                href="#"
                 className="h-10 w-10 bg-gray-900 rounded-md flex items-center justify-center text-white cursor-pointer hover:bg-gray-800 transition"
                 aria-label={name}
               >
