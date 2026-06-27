@@ -88,9 +88,11 @@ export default function SignupForm() {
             name: formData.name,
             email: formData.email,
             password: formData.password,
-            role,
-            plan,
         });
+
+        if (!authError) {
+            await authClient.updateUser({ role, plan });
+        }
 
         setLoading(false);
 

@@ -110,10 +110,19 @@ function Navbar() {
         <div className="md:hidden bg-black border-t border-gray-800 p-6 flex flex-col gap-4">
           <Link href="/cases" className="text-white">Browse Cases</Link>
           <Link href="/dashboard/lawyer/lawfirm" className="text-white">Law Firm</Link>
-          <Link href="/" className="text-white">To Know</Link>
+          <Link href="/plans" className="text-white">Buy Plans</Link>
+
+            <li>
+            {
+              !isPending && user && (<Link href={dashboardUrl} className="text-white hover:text-white"> Dashboard</Link>)
+            }
+          </li>
           <hr className="border-gray-800" />
           {/* ✅ Same fix in mobile menu — use pathname not usePathname */}
           <Link href={`/auth/signin?redirect=${pathname}`} className="text-blue-400">Sign In</Link>
+        
+
+
           <Link href={`/auth/signup?redirect=${pathname}`}>
             <Button color="default" variant="flat" className="bg-white text-black font-bold">
               Get Started
