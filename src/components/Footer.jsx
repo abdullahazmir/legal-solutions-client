@@ -4,9 +4,9 @@ import Image from "next/image";
 import { LogoFacebook, LogoLinkedin, LogoGithub } from '@gravity-ui/icons';
 
 const footerLinks = {
-  product: ["Cases discovery", "Client Experience", "Law firm",],
-  navigations: ["Help center", "Career library", "Contact"],
-  resources: ["Brand Guideline", "Newsroom"],
+  Services: ["Cases discovery", "Client Experience", "Law firm",],
+  Navigations: ["Help center", "Career library", "Contact"],
+  Resources: ["Brand Guideline", "Newsroom"],
 };
 
 // Map names to icon components
