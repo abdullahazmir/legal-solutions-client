@@ -16,3 +16,13 @@ export const updateUserRole = async (userId, role) => {
 
     return data;
 }
+
+// src/lib/actions/users.js
+
+
+export async function setUserRole(userId, role, plan) {
+    await auth.api.setRole({
+        body: { userId, role },
+        headers: await headers(),
+    });
+}

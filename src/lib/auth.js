@@ -19,18 +19,21 @@ export const auth = betterAuth({
   database: mongodbAdapter(db, {
     client,
   }),
-  user:{
+  user: {
     additionalFields: {
-      role: {
-        defaultValue: "client",
-        input: true
-      },
-      plan:{
-        defaultValue: 'client_basic',
-        input: true
-      }
+        role: {
+            defaultValue: "client",
+            input: true,        // ✅ already there
+            // validator: {
+            //     input: (value) => ["client", "lawyer"].includes(value) ? value : "client"
+            // }
+        },
+        plan: {
+            defaultValue: "client_basic",
+            input: true
+        }
     }
-  },
+},
   // ✅ Add this — expose extra user fields in the session
   session: {
         additionalFields: {
@@ -39,19 +42,13 @@ export const auth = betterAuth({
         },
     },
 
-    plugins: [
-      admin()
-    ]
+    // plugins: [
+    //   admin()
+    // ]
 
     
   });
 
 
   
-  // ✅ Also allow these fields to be set during signup
-  // user: {
-  //     additionalFields: {
-  //         role: { type: "string" },
-  //         plan: { type: "string" },
-  //     },
-  // },
+ 

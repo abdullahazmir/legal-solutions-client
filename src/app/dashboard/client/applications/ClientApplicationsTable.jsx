@@ -3,7 +3,7 @@
 import React from 'react';
 import { Table, Chip, Button } from '@heroui/react';
 import {
-    
+
     Briefcase,
     Clock,
     CheckCircle,
@@ -153,14 +153,12 @@ const ClientApplicationsTable = ({ cases }) => {
 
                                         {/* ACTION */}
                                         <Table.Cell className="text-right">
-                                            <Button
-                                                size="sm"
-                                                variant="light"
-                                                className="text-zinc-400 hover:text-zinc-100 font-normal text-sm"
-                                                onClick={() => console.log('View:', app._id)}
+                                             <Link
+                                                href={`/cases/${app.caseId}`}
+                                                className="text-xs text-emerald-400 border border-emerald-500/30 px-3 py-1.5 rounded-lg hover:bg-emerald-500/10 transition"
                                             >
-                                                View
-                                            </Button>
+                                                View →
+                                            </Link>
                                         </Table.Cell>
 
                                     </Table.Row>

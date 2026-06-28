@@ -20,7 +20,7 @@ const getAvailabilityStyle = (availability) => {
 
 export default function CaseCard({ c }) {
     const caseId = c._id?.$oid || c._id;
-    console.log(caseId)
+    // console.log(caseId)
 
     return (
         <Card className="bg-[#161618] border border-zinc-800 rounded-2xl overflow-hidden hover:border-zinc-600 transition-all duration-200 hover:-translate-y-0.5 flex flex-col h-full">

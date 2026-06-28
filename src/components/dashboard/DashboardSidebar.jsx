@@ -47,7 +47,8 @@ const navLinksMap ={
   admin: adminNavLinks
 }
 
-const navItems = navLinksMap[user?.role || 'client']
+console.log("user role:", user?.role)
+const navItems = navLinksMap[user?.role] || clientNavLinks
 
   const navContent =  <nav className="flex flex-col gap-1">
                 {navItems.map((item) => (

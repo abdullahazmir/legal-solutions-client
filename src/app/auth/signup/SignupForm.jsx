@@ -4,6 +4,7 @@ import { useState } from "react";
 import { authClient } from "@/lib/auth-client";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
+import { setUserRole } from "@/lib/actions/users";
 
 const UserIcon = () => (
     <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24">
@@ -77,32 +78,32 @@ export default function SignupForm() {
         setError("");
     };
 
-    const handleSignup = async (e) => {
-        e.preventDefault();
-        setLoading(true);
-        setError("");
+   const handleSignup = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    setError("");
 
-        const plan = ROLE_DEFAULT_PLAN[role];
+    const plan = ROLE_DEFAULT_PLAN[role];
 
-        const { error: authError } = await authClient.signUp.email({
-            name: formData.name,
-            email: formData.email,
-            password: formData.password,
-        });
+    const { error: authError } = await authClient.signUp.email({
+        name: formData.name,
+        email: formData.email,
+        password: formData.password,
+        role,   // ✅ pass directly here
+        plan,   // ✅ pass directly here
+    });
 
-        if (!authError) {
-            await authClient.updateUser({ role, plan });
-        }
+    setLoading(false);
 
-        setLoading(false);
+   
 
-        if (authError) {
-            setError(authError.message || "Something went wrong. Please try again.");
-            return;
-        }
+    if (authError) {
+        setError(authError.message || "Something went wrong. Please try again.");
+        return;
+    }
 
-        router.push(redirectTo);
-    };
+    router.push(redirectTo);
+};
 
     const handleGoogleSignIn = async () => {
         await authClient.signIn.social({ provider: "google" });

@@ -4,10 +4,13 @@ import Link from "next/link";
 
 export default async function SavedCasesPage() {
   const savedCases = await getSavedCases();
+  // Add this line temporarily in SavedCasesPage before the return
+console.log("saved case keys:", JSON.stringify(savedCases[0], null, 2));
 
   return (
     <div className="p-6">
       <h1 className="text-2xl font-semibold text-white mb-6">Saved Cases</h1>
+      
 
       {savedCases.length === 0 ? (
         <p className="text-zinc-500">You haven't saved any lawyers yet.</p>

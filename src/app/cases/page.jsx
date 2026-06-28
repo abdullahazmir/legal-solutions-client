@@ -1,27 +1,36 @@
 // src/app/cases/page.jsx
 
-import CasesFilter from "@/components/Cases/CasesFilter";
+import CaseListingContainer from "@/components/Cases/CaseListingContainer";
+import { getCases } from "@/lib/api/cases"; // ← add this
 
-
-const getAllCases = async () => {
-    try {
-        const res = await fetch(
-            `${process.env.NEXT_PUBLIC_BASE_URL}/api/cases`,
-            { cache: "no-store" }
-        );
-        const contentType = res.headers.get("content-type");
-        if (!contentType?.includes("application/json")) return [];
-        if (!res.ok) return [];
-        return res.json();
-    } catch (err) {
-        console.error("getAllCases error:", err.message);
-        return [];
-    }
-};
+// const getAllCases = async () => {
+//     try {
+//         const res = await fetch(
+//             `${process.env.NEXT_PUBLIC_BASE_URL}/api/cases`,
+//             { cache: "no-store" }
+//         );
+//         const contentType = res.headers.get("content-type");
+//         if (!contentType?.includes("application/json")) return [];
+//         if (!res.ok) return [];
+//         return res.json();
+//     } catch (err) {
+//         console.error("getAllCases error:", err.message);
+//         return [];
+//     }
+// };
 export const dynamic = 'force-dynamic';
 
-export default async function CasesListPage() {
-    const cases = await getAllCases();
+export default async function CasesListPage({searchParams}) {
+    const filters = await searchParams;
+    
+    const queySearch = new URLSearchParams(filters)
+    const queryString = queySearch.toString()
+    
+    // console.log('search result', filters, queryString)
+
+    const { cases, total } = await getCases(queryString);
+
+    console.log("cases type:", typeof cases, Array.isArray(cases), cases);
 
     return (
         <main className="min-h-screen bg-zinc-950 py-12 px-4 sm:px-6 lg:px-8">
@@ -36,7 +45,7 @@ export default async function CasesListPage() {
                 </div>
 
                 {/* Filter + Grid */}
-                <CasesFilter cases={cases} />
+                <CaseListingContainer filters={filters} cases={cases} total={total} />
                 
                
 
