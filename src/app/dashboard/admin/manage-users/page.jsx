@@ -1,10 +1,8 @@
-// src/app/dashboard/admin/users/page.jsx
 import AdminUsersTable from "@/components/dashboard/AdminUsersTable";
 import { getUsersList } from "@/lib/api/users";
 
 export default async function AdminUsersPage() {
-    const data  = await getUsersList();
-    const users = data?.users || [];
+    const users = await getUsersList() ?? []; // ✅ plain array, no .users
 
     return (
         <div className="min-h-screen bg-[#121212] p-8 text-slate-200">

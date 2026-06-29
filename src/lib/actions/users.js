@@ -1,28 +1,11 @@
-'use server'
-import { headers } from "next/headers";
-import { auth } from "../auth"
-import { revalidatePath } from "next/cache";
-
+// lib/actions/users.js — replace everything with this
 export const updateUserRole = async (userId, role) => {
-    const data = await auth.api.setRole({
-        body: {
-            userId: userId,
-            role: role
+    const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/admin/users/${userId}/role`, {
+        method: "PATCH",
+        headers: { 
+            "Content-Type": "application/json",
         },
-        headers: await headers()
-    })
-
-    revalidatePath('/dashboard/admin/users');
-
-    return data;
-}
-
-// src/lib/actions/users.js
-
-
-export async function setUserRole(userId, role, plan) {
-    await auth.api.setRole({
-        body: { userId, role },
-        headers: await headers(),
+        body: JSON.stringify({ role }),
     });
-}
+    return res.json();
+};

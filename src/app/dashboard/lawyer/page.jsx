@@ -18,7 +18,7 @@ const LawyerDashboardHomePage = () => {
     return (
         <div>
             <h2 className="text-4xl">
-                Welcome back,{" "}
+                Welcome back, {" "}
                 {isPending
                     ? <span className="text-zinc-500 animate-pulse">...</span>
                     : user?.name

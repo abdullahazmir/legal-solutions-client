@@ -1,17 +1,8 @@
-import { headers } from "next/headers";
-import { auth } from "../auth";
+// lib/api/users.js
 
-export const getUsersList =async()=>{
-    const users = await auth.api.listUsers({
-    query: {
-       
-        sortBy: "createdAt",
-        sortDirection: "desc",
-       
-    },
-    // This endpoint requires session cookies.
-    headers: await headers(),
-});
+import { serverFetch } from "../core/server";
 
-return users
-}
+export const getUsersList = async () => {
+    const users = await serverFetch('/api/users');
+    return users; // returns plain array
+};

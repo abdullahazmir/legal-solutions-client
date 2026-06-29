@@ -79,6 +79,17 @@ export default function LawyerProfileForm({ session, lawFirm }) {
     }; // ← handleSubmit closes here
 
     // ── return is at the component level ──
+
+    // At the top of the component, before the return
+if (!lawFirm) {
+    return (
+        <div className="min-h-screen bg-[#0d0d0e] flex items-center justify-center">
+            <p className="text-zinc-400 text-sm">
+                No law firm found. Please register your firm first.
+            </p>
+        </div>
+    );
+}
     return (
         <div className="min-h-screen bg-[#0d0d0e] text-white py-12 px-4 sm:px-6 lg:px-8">
             <div className="max-w-3xl mx-auto bg-[#121214] border border-zinc-900 rounded-xl p-8 shadow-2xl">

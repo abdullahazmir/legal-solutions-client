@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import { Person, Briefcase, ChevronLeft, ChevronRight, CrownDiamond } from "@gravity-ui/icons";
 import { updateUserRole } from "@/lib/actions/users";
+import { authClient } from "@/lib/auth-client";
 
 const getRoleBadge = (role) => {
     switch (role?.toLowerCase()) {
@@ -28,6 +29,7 @@ const getRoleBadge = (role) => {
 };
 
 export default function AdminUsersTable({ users }) {
+    const { data: session } = authClient.useSession();
     const [currentPage, setCurrentPage]     = useState(1);
     const [isConfirmOpen, setIsConfirmOpen] = useState(false);
     const [pendingChange, setPendingChange] = useState(null); // { userId, userName, newRole }
@@ -49,12 +51,20 @@ export default function AdminUsersTable({ users }) {
         setIsConfirmOpen(true);
     };
 
-  const confirmRoleChange = async () => {
+    const confirmRoleChange = async () => {
     if (!pendingChange) return;
-
     setIsUpdating(true);
     try {
-        await updateUserRole(pendingChange.userId, pendingChange.newRole);
+        const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/admin/users/${pendingChange.userId}/role`, {
+            method: "PATCH",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${session?.session?.token}`, // 👈 Better Auth token
+            },
+            body: JSON.stringify({ role: pendingChange.newRole }),
+        });
+        const data = await res.json();
+        console.log('result:', data);
         window.location.reload();
     } catch (err) {
         console.error("Role update failed:", err);
@@ -64,6 +74,11 @@ export default function AdminUsersTable({ users }) {
         setPendingChange(null);
     }
 };
+
+
+
+
+
     return (
         <div className="relative w-full">
             <div className="w-full bg-[#1e1e1e] border border-zinc-800 rounded-xl overflow-hidden shadow-2xl">
@@ -86,7 +101,7 @@ export default function AdminUsersTable({ users }) {
                                 const userRole = user.role?.toLowerCase() || "client";
 
                                 return (
-                                    <tr key={user.id} className="hover:bg-zinc-900/40 transition-colors duration-150">
+                                    <tr key={user._id} className="hover:bg-zinc-900/40 transition-colors duration-150">
 
                                         {/* User */}
                                         <td className="py-4 px-6 whitespace-nowrap">
@@ -141,7 +156,7 @@ export default function AdminUsersTable({ users }) {
                                             <div className="flex items-center justify-end gap-3">
                                                 {userRole !== "admin" && (
                                                     <button
-                                                        onClick={() => initiateRoleChange(user.id, user.name, "admin")}
+                                                        onClick={() => initiateRoleChange(user._id, user.name, "admin")}
                                                         className="text-zinc-400 hover:text-purple-400 transition-colors"
                                                     >
                                                         Make Admin
@@ -149,7 +164,7 @@ export default function AdminUsersTable({ users }) {
                                                 )}
                                                 {userRole !== "lawyer" && (
                                                     <button
-                                                        onClick={() => initiateRoleChange(user.id, user.name, "lawyer")}
+                                                        onClick={() => initiateRoleChange(user._id, user.name, "lawyer")}
                                                         className="text-zinc-400 hover:text-white transition-colors"
                                                     >
                                                         Make Lawyer
@@ -157,7 +172,7 @@ export default function AdminUsersTable({ users }) {
                                                 )}
                                                 {userRole !== "client" && (
                                                     <button
-                                                        onClick={() => initiateRoleChange(user.id, user.name, "client")}
+                                                        onClick={() => initiateRoleChange(user._id, user.name, "client")}
                                                         className="text-zinc-400 hover:text-white transition-colors"
                                                     >
                                                         Make Client

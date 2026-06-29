@@ -153,12 +153,20 @@ const ClientApplicationsTable = ({ cases }) => {
 
                                         {/* ACTION */}
                                         <Table.Cell className="text-right">
-                                             <Link
+                                            <Link
                                                 href={`/cases/${app.caseId}`}
                                                 className="text-xs text-emerald-400 border border-emerald-500/30 px-3 py-1.5 rounded-lg hover:bg-emerald-500/10 transition"
                                             >
                                                 View →
                                             </Link>
+                                            <Link
+                                                href={`/dashboard/user/comments?applicationId=${app._id?.$oid || app._id}&caseId=${app.caseId}&caseName=${encodeURIComponent(app.caseName)}&lawyerName=${encodeURIComponent(app.lawyerName)}`}
+                                                className="text-xs text-zinc-300 border border-zinc-700 px-3 py-1.5 rounded-lg hover:bg-zinc-800 transition"
+                                            >
+                                                💬
+                                            </Link>
+
+
                                         </Table.Cell>
 
                                     </Table.Row>

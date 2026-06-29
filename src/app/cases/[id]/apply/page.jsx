@@ -35,7 +35,7 @@ const ApplyPage = async ({ params }) => {
 
     if (user.role !== 'client') {
         return <div>
-            <h1>Only client can apply for this</h1>
+            <h1 className="text-center p-10 font-bold text-3xl text-red-700">Only client can apply for this</h1>
         </div>
     }
 

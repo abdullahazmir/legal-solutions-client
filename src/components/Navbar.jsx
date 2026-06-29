@@ -18,13 +18,13 @@ function Navbar() {
     await signOut();
   };
   const dashboardLinks ={
-    client: '/dashboard/client',
+    client: '/dashboard/user',
     lawyer: '/dashboard/lawyer',
     admin: '/dashboard/admin'
   }
   // const user = await getUserSession()
 
-      const dashboardUrl = dashboardLinks[user?.role] || "/dashboard/client";
+      const dashboardUrl = dashboardLinks[user?.role] || "/dashboard/user";
       
       return (
     <nav className="sticky top-0 z-40 w-full border-b border-gray-800 bg-black/70 backdrop-blur-lg">
