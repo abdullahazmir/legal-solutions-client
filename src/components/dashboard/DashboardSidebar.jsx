@@ -16,7 +16,7 @@ export async function DashboardSidebar() {
     { icon: Bell, href: "/dashboard/lawyer/cases/new", label: "Post a case" },
     { icon: Briefcase, href: "/dashboard/lawyer/hiring-history", label: "Hiring History" },
     { icon: Envelope, href: "#", label: "Messages" },
-    { icon: Person, href: "/dashboard/lawyer/manage-legal-profile", label: "Legal Profile" },
+    { icon: Person, href: "#", label: "Legal Profile" },
   ];
 
 
@@ -32,7 +32,7 @@ export async function DashboardSidebar() {
   const adminNavLinks = [
     { icon: LayoutDashboard, href: "/dashboard/admin", label: "Dashboard" },
     { icon: Person, href: "/dashboard/admin/manage-users", label: "Manage Users" },
-    { icon: FileText, href: "/dashboard/admin/applications", label: "Applications" },
+    { icon: FileText, href: "/cases", label: "Applications" },
     { icon: CreditCard, href: "/plans", label: "Transactions" },
     { icon: ShieldCheck, href: "/dashboard/admin/analytics", label: "Analytics" },
 
